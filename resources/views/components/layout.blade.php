@@ -19,7 +19,7 @@
             </div>
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-4">
-                <a href="" class="text-white hover:text-gray-300">Home</a>
+                <a href="/" class="text-white hover:text-gray-300">Home</a>
                 <a href="" class="text-white hover:text-gray-300">About</a>
                 <!-- Add more navigation links as needed -->
             </div>

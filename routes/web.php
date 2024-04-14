@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('/', [PermissionController::class, 'index']); //Default route
 Route::get('/perm', [PermissionController::class, 'index'])->name('perm.index');
-// Route::resource('/perm', PermissionController::class);
+Route::get('/perm/create', [PermissionController::class, 'create'])->name('perm.create');
+Route::post('/perm', [PermissionController::class, 'store'])->name('perm.store');
