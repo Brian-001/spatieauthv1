@@ -11,17 +11,33 @@
             <table class="table-auto w-full mt-4">
                 <thead>
                     <tr>
-                        <td class="border-2 px-4 py-2">Id</td>
-                        <td class="border-2 px-4 py-2">Name</td>
-                        <td class="border-2 px-4 py-2">Action</td>
+                        <td class="border-2 px-4 py-4">Id</td>
+                        <td class="border-2 px-4 py-4">Name</td>
+                        <td class="border-2 px-4 py-4">Action</td>
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse ($permissions as $permission )
                     <tr>
-                        <td class="border-2 px-4 py-2">1</td>
-                        <td class="border-2 px-4 py-2">Create Post</td>
-                        <td class="border-2 px-4 py-2">Delete</td>
+                        <td class="border-2 px-4 py-4">{{$permission->id}}</td>
+                        <td class="border-2 px-4 py-4">{{$permission->name}}</td>
+                        <td class="border-2 px-4 py-4">
+                            <div class="inline-flex">
+                                <a href="{{ route('perm.edit', $permission->id)}}" class="decoration-none bg-green-500 text-white hover:bg-green-700 px-4 py-2 rounded-lg cursor-pointer">Edit</a>
+                                <form action="{{ route('perm.destroy', $permission->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="decoration-none bg-red-500 text-white hover:bg-red-700 px-4 py-2 rounded-lg cursor-pointer">Delete</button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
+                    @empty
+                    <tr>
+                        <td class="border-2">Sorry! No Permission Found</td>
+                    </tr>
+                    @endforelse
+
                 </tbody>
             </table>
         </div>

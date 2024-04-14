@@ -15,12 +15,12 @@
             <!-- Logo -->
             <div class="flex items-center">
                 <img src="{{ asset('images/avatar.png') }}" alt="Logo" class="h-8 w-8 mr-2">
-                <span class="text-white text-lg font-semibold">Dashboard</span>
+                <span class="text-white text-lg font-semibold">SpatieAuth</span>
             </div>
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-4">
                 <a href="/" class="text-white hover:text-gray-300">Home</a>
-                <a href="" class="text-white hover:text-gray-300">About</a>
+                <a href="{{route('perm.create')}}" class="text-white hover:text-gray-300">+ Permissions</a>
                 <!-- Add more navigation links as needed -->
             </div>
             <!-- Dropdown for Login/Logout -->

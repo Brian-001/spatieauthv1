@@ -13,7 +13,8 @@ class PermissionController extends Controller
     public function index()
     {
         //
-        return view('perm.index');
+        $permissions  = Permission::get();
+        return view('perm.index', compact('permissions'));
     }
 
     /**
@@ -51,24 +52,44 @@ class PermissionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
         //
+        $permission = Permission::findOrFail($id); // Fetch the permission data
+        return view('perm.edit', compact('permission'));
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Permission $permission)
     {
         //
+        $request->validate([
+            'name' => 'required|string|unique:permissions,name,' . $request->route('permission')->id
+        ]);
+        try {
+
+            $permission->update([
+                'name' => $request->name
+            ]);
+            return redirect('/')->with('status', 'Permission updated successfully');
+
+        } catch (\Exception $e) {
+            return back()->withInput()->withErrors(['error' => 'Failed to update permission']);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($permissionId)
     {
         //
+        $permission = Permission::findOrFail($permissionId);
+        $permission->delete($permissionId);
+
+        return redirect('/')->with('status', 'Permission deleted successfully');
     }
 }
