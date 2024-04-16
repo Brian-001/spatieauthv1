@@ -69,6 +69,7 @@ class PermissionController extends Controller
         $request->validate([
             'name' => 'required|string|unique:permissions,name,' . $request->route('permission')->id
         ]);
+        //Handles an exception that might occur during update gracefully
         try {
 
             $permission->update([

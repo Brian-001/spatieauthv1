@@ -129,17 +129,33 @@ Let's now populate our files with respective code
             <table class="table-auto w-full mt-4">
                 <thead>
                     <tr>
-                        <td class="border-2 px-4 py-2">Id</td>
-                        <td class="border-2 px-4 py-2">Name</td>
-                        <td class="border-2 px-4 py-2">Action</td>
+                        <td class="border-2 px-4 py-4">Id</td>
+                        <td class="border-2 px-4 py-4">Name</td>
+                        <td class="border-2 px-4 py-4">Action</td>
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse ($permissions as $permission )
                     <tr>
-                        <td class="border-2 px-4 py-2">1</td>
-                        <td class="border-2 px-4 py-2">Create Post</td>
-                        <td class="border-2 px-4 py-2">Delete</td>
+                        <td class="border-2 px-4 py-4">{{$permission->id}}</td>
+                        <td class="border-2 px-4 py-4">{{$permission->name}}</td>
+                        <td class="border-2 px-4 py-4">
+                            <div class="inline-flex">
+                                <a href="{{ route('perm.edit', $permission->id)}}" class="decoration-none bg-green-500 text-white hover:bg-green-700 px-4 py-2 rounded-lg cursor-pointer">Edit</a>
+                                <form action="{{ route('perm.destroy', $permission->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="decoration-none bg-red-500 text-white hover:bg-red-700 px-4 py-2 rounded-lg cursor-pointer">Delete</button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
+                    @empty
+                    <tr>
+                        <td class="border-2">Sorry! No Permission Found</td>
+                    </tr>
+                    @endforelse
+
                 </tbody>
             </table>
         </div>
@@ -148,6 +164,7 @@ Let's now populate our files with respective code
         </div>
     </div>
 </x-layout>
+
 ```
 
 
@@ -170,3 +187,154 @@ Let's now populate our files with respective code
     </div>
 </x-layout>
 ```
+*edit.blade.php*
+
+```php
+<x-layout>
+    <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
+        <h1 class="text-2xl font-semibold mb-4">Edit Permissions</h1>
+        <form action="{{route('perm.update', $permission->id)}}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="mb-4 mt-4">
+                <label for="name" class="block text-gray-700 font-semibold mb-2">Permission Name</label>
+                <input type="text" name="name" value="{{ $permission->name }}" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                @error('name')
+                <p class="text-red-500 text-xs mt-1">
+                    {{$message}}
+                </p>
+                @enderror
+            </div>
+            <div class="flex justify-end">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Update</button>
+            </div>
+        </form>
+    </div>
+</x-layout>
+```
+*PermissionController*
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+
+class PermissionController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+        $permissions  = Permission::get();
+        return view('perm.index', compact('permissions'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+        return view('perm.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+        $request->validate([
+            'name' => 'required|string|unique:permissions,name'
+        ]);
+        Permission::create([
+            'name' => $request->name
+        ]);
+        return redirect('/')->with('status', 'Permission Created Successfully');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        //
+        $permission = Permission::findOrFail($id); // Fetch the permission data
+        return view('perm.edit', compact('permission'));
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Permission $permission)
+    {
+        //
+        $request->validate([
+            'name' => 'required|string|unique:permissions,name,' . $request->route('permission')->id
+        ]);
+
+        //Handles an exception that might occur during update gracefully
+        try {
+
+            $permission->update([
+                'name' => $request->name
+            ]);
+            return redirect('/')->with('status', 'Permission updated successfully');
+
+        } catch (\Exception $e) {
+            return back()->withInput()->withErrors(['error' => 'Failed to update permission']);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($permissionId)
+    {
+        //
+        $permission = Permission::findOrFail($permissionId);
+        $permission->delete($permissionId);
+
+        return redirect('/')->with('status', 'Permission deleted successfully');
+    }
+}
+
+```
+
+*web.php*
+
+```php
+<?php
+
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
+use Illuminate\Support\Facades\Route;
+
+/**********************************************************************************************/
+                            /*Routes that handle Permission*/
+/**********************************************************************************************/
+Route::get('/', [PermissionController::class, 'index']); //Default route
+Route::get('/perm', [PermissionController::class, 'index'])->name('perm.index');
+Route::get('/perm/create', [PermissionController::class, 'create'])->name('perm.create');
+Route::post('/perm', [PermissionController::class, 'store'])->name('perm.store');
+Route::get('/perm/{id}', [PermissionController::class, 'show'])->name('perm.show');
+Route::get('/perm/{id}/edit', [PermissionController::class, 'edit'])->name('perm.edit');
+Route::put('/perm/{permission}', [PermissionController::class, 'update'])->name('perm.update');
+Route::delete('/perm/{permissionId}', [PermissionController::class, 'destroy'])->name('perm.destroy');
+
+```
+
+>Create the same structure for roles and remember to forego the default route in web.php
