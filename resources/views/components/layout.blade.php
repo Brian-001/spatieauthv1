@@ -21,6 +21,8 @@
             <div class="hidden md:flex items-center space-x-4">
                 <a href="/" class="text-white hover:text-gray-300">Home</a>
                 <a href="{{route('perm.create')}}" class="text-white hover:text-gray-300">+ Permissions</a>
+                <a href="{{route('rol.create')}}" class="text-white hover:text-gray-300">+ Roles</a>
+                <a href="{{route('rol.index')}}" class="text-white hover:text-gray-300">Roles</a>
                 <!-- Add more navigation links as needed -->
             </div>
             <!-- Dropdown for Login/Logout -->
