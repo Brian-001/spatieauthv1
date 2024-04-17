@@ -1,4 +1,5 @@
 <x-layout>
+    @include('nav-links')
     <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
         <h1 class="text-2xl font-semibold mb-4">Permissions</h1>
         <div class="mb-4">
