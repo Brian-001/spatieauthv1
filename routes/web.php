@@ -43,3 +43,5 @@ Route::get('rol/{id}', [RoleController::class, 'show'])->name('rol.show');
 Route::get('/rol/{id}/edit', [RoleController::class, 'edit'])->name('rol.edit');
 Route::put('/rol/{role}', [RoleController::class, 'update'])->name('rol.update');
 Route::delete('rol/{roleId}', [RoleController::class, 'destroy'])->name('rol.destroy');
+Route::get('/rol/{roleId}/give-permissions', [RoleController::class, 'addPermissionToRole'])->name('rol.give-permissions');
+Route::put('/rol/{roleId}/give-permissions', [RoleController::class, 'givePermissionToRole'])->name('rol.give-permissions');
