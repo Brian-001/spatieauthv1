@@ -93,12 +93,12 @@ class RoleController extends Controller
 
     public function addPermissionToRole($roleId)
     {
-        $permissions = Permission::get();//Gets all permissions from Spatie Permission Model
+        $permissions = Permission::get(); //Gets all permissions from Spatie Permission Model
         $role = Role::findOrFail($roleId); //Finds roleId from Spatie Role Model
         $rolePermissions = DB::table('role_has_permissions')
-                                ->where('role_has_permissions.role_id', $role->id)
-                                ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
-                                ->all();
+            ->where('role_has_permissions.role_id', $role->id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
+            ->all();
 
         //Passes role, permissions and rolePermissions to the view called add-permissions.blade.php
         return view('rol.add-permissions', [
@@ -108,6 +108,7 @@ class RoleController extends Controller
         ]);
     }
 
+    /**his functions updates permissions assigned to roles*/
     public function givePermissionToRole(Request $request, $roleId)
     {
         $request->validate([

@@ -390,4 +390,11 @@ Let's breakdown this form action just a little bit.
 ```
 This form is specifying a route using Laravel route() helper function. It is pointing to a route named `rol.give-permissions` and passing a parameter `roleId` with the value of `role->id`. This means when the form is submitted, it will send a `POST` request to the route named `rol.give-permissions` with role Id as a parameter.
 
-This route definition in Laravel maps a `GET` request to the URL pattern `/rol/{roleId}/give-permissions` to the `addPermissionToRole() `method within the `RoleController` class
+```php
+
+Route::get('/rol/{roleId}/give-permissions', [RoleController::class, 'addPermissionToRole'])->name('rol.give-permissions');
+
+```
+This route definition in Laravel maps a `GET` request to the URL pattern `/rol/{roleId}/give-permissions` to the `addPermissionToRole() `method within the `RoleController` class. 
+
+It also assigns the name `rol.give-permissions` to this route, allowing it to be referenced easily in other parts of the application using Laravel's route helper functions. The `{roleId}` part in the URL pattern represents a dynamic parameter that will be passed to the controller method.
