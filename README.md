@@ -1,4 +1,4 @@
-# Spatie Roles and Permissions
+<h1 style= "color:cyan;">Spatie Roles and Permissions</h1> 
 
 Create normal laravel app 
 
@@ -398,3 +398,80 @@ Route::get('/rol/{roleId}/give-permissions', [RoleController::class, 'addPermiss
 This route definition in Laravel maps a `GET` request to the URL pattern `/rol/{roleId}/give-permissions` to the `addPermissionToRole() `method within the `RoleController` class. 
 
 It also assigns the name `rol.give-permissions` to this route, allowing it to be referenced easily in other parts of the application using Laravel's route helper functions. The `{roleId}` part in the URL pattern represents a dynamic parameter that will be passed to the controller method.
+
+
+Add the following to the `RoleController`
+
+```php
+    public function addPermissionToRole($roleId)
+    {
+        $permissions = Permission::get(); //Gets all permissions from Spatie Permission Model
+        $role = Role::findOrFail($roleId); //Finds roleId from Spatie Role Model
+        $rolePermissions = DB::table('role_has_permissions')
+            ->where('role_has_permissions.role_id', $role->id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
+            ->all();
+
+        /**Passes role, permissions and rolePermissions to the view called add-permissions.blade.php**/
+        return view('rol.add-permissions', [
+            'role' => $role,
+            'permissions' => $permissions,
+            'rolePermissions' => $rolePermissions
+        ]);
+    }
+
+    /**This functions updates permissions assigned to roles*/
+    public function givePermissionToRole(Request $request, $roleId)
+    {
+        $request->validate([
+
+            'permission' => 'required'
+        ]);
+        $role = Role::findOrFail($roleId);
+        $role->syncPermissions($request->permission);
+        return redirect()->back()->with('status', 'Permission added to role');
+    }
+```
+Let's Start by breaking down the first method
+```php
+public function addPermissionToRole($roleId)
+```
+This method accepts parameter `$roleId` which represents the the ID of the role to which permissions will be added.
+
+*Fetching Role Permissions*
+```php
+$permissions = Permission::get();
+$role = Role::findOrFail($roleId);
+```
+It fetches all `permissions` from the `Spatie Permission model` and stores them in the `$permissions` variable.
+
+It also finds the `role` with the given `$roleId` using the `Spatie Role model` and stores it in the `$role` variable
+
+```php
+$rolePermissions = DB::table('role_has_permissions')
+    ->where('role_has_permissions.role_id', $role->id)
+    ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
+    ->all();
+```
+The above fetches the `permissions` assigned to the specified `role ($roleId)` from the `role_has_permissions` table.
+
+The `pluck()` method retrieves only the `permission_id` column from the result and creates `an associative array` where the `permission_id` is both the key and the value.
+
+The `all()` method converts the result to an array.
+
+*Passing data to the view*
+
+```php
+return view('rol.add-permissions', [
+    'role' => $role,
+    'permissions' => $permissions,
+    'rolePermissions' => $rolePermissions
+]);
+```
+Returns a view named `add-permissions.blde.php` in `rol` folder.
+
+It passes the data to the view in associative array
+
+* The `$role variable`, containing the `role object`.
+* The `$permissions variable`, containing `all permissions`
+* The `$rolePermissions variable`, containing `permissions` assigned to the `role`
