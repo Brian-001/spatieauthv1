@@ -382,6 +382,24 @@ Create a form called `add-permissions.blade.php`. Since you are adding permissio
     </div>
 </x-layout>
 ```
+Allow me to explain this section
+
+```php
+@foreach ($permissions as $permission)
+
+```
+This foreach loop iterates over each `permission` in the `$permissions` array
+
+```php
+<input type="checkbox" name="permission[]" value="{{ $permission->name }} {{ in_array($permission->id, $rolePermissions) ? 'checked':'' }}
+ class="form-checkbox h-5 w-5 text-blue-600">
+<span class="ml-2 text-gray-700">{{ $permission->name }}</span>
+```
+* The `input `element of type `checkbox` with the name `permission[]` indicates that multiple values can be submitted under this name.
+
+* The value `attribute of the checkbox` is set to the name of the `permission` `($permission->name)`.
+`in_array()` method checks if the `permission's ID` is present in the `$rolePermissions array` (which contains the `IDs of permissions associated with the role`). If it is, the checkbox will be checked ('checked' attribute), otherwise it remains unchecked.
+
 Form action is specified using `route()` helper function and the `route name` defined.
 Let's breakdown this form action just a little bit.
 
