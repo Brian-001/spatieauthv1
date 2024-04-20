@@ -432,6 +432,8 @@ Add the following to the `RoleController`
         return redirect()->back()->with('status', 'Permission added to role');
     }
 ```
+*First Method Signature*
+
 Let's Start by breaking down the first method
 ```php
 public function addPermissionToRole($roleId)
@@ -475,3 +477,33 @@ It passes the data to the view in associative array
 * The `$role variable`, containing the `role object`.
 * The `$permissions variable`, containing `all permissions`
 * The `$rolePermissions variable`, containing `permissions` assigned to the `role`
+
+*Second Method Signature*
+
+```php
+public function givePermissionToRole(Request $request, $roleId)
+```
+It accepts two parameters `$request` which is an instance of `Illuminate\Http\Request` and `roleId` which represents the ID of the role to which permissions will be added.
+
+```php
+$role = Role::findOrFail($roleId);
+```
+Finds the `role` with the given `$roleId` using the `findOrFail()` method. If no role is found with that ID, Laravel will throw a `ModelNotFoundException`.
+
+*Syncing Permissions*
+
+```php
+$role->syncPermissions($request->permission);
+```
+It synchronizes the `permissions for the role` with the `permissions provided in the request`.
+
+This method is typically used when you want to update the related `models` `many-to-many` relationship. In this case, it `updates the permissions` `associated with the role` based on the `permissions provided in the request`
+
+*Redirecting*
+
+```php
+return redirect()->back()->with('status', 'Permission added to role');
+```
+It redirects the user back to the previous page typically the page where the form was submitted and attaches a status a session message `Permission added to role` to indicate that the permission has been successfully added to the role.
+
+

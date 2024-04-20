@@ -64,7 +64,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        //Validates Permissions
         $request->validate([
             'name' => 'required|string|unique:roles,name,' . $request->route('role')->id
         ]);
