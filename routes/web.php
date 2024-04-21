@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,3 +46,16 @@ Route::put('/rol/{role}', [RoleController::class, 'update'])->name('rol.update')
 Route::delete('rol/{roleId}', [RoleController::class, 'destroy'])->name('rol.destroy');
 Route::get('/rol/{roleId}/give-permissions', [RoleController::class, 'addPermissionToRole'])->name('rol.give-permissions');
 Route::put('/rol/{roleId}/give-permissions', [RoleController::class, 'givePermissionToRole'])->name('rol.give-permissions');
+
+
+/**********************************************************************************************/
+/*Routes that handle User*/
+/**********************************************************************************************/
+
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::put('users/{userId}', [UserController::class, 'update'])->name('users.update');
+Route::delete('users/{userId}', [UserController::class, 'destroy'])->name('users.destroy');
