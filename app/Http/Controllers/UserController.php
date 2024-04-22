@@ -65,10 +65,25 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email|unique:users,name',
-            'password' => 'required'
+            'password' => 'nullable',
+            'roles' => 'required'
         ]);
 
+        $data = [
+            'name' =>$request->name,
+            'email'=>$request->email
+        ];
+
+        if(!empty($request->password))
+        {
+            $data +=[
+                'password' => Hash::make($request->password)
+            ];
+        }
+        $user->update($data);
+        $user->syncRoles($request->roles);
+
+        return redirect('/users')->with('status', 'User with roles updated successfully');
     }
 
     public function destroy($userId)

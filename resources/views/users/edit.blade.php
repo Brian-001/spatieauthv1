@@ -23,11 +23,22 @@
                 @enderror
             </div>
             <div class="mb-4 mt-4">
+                <label for="password" class="block text-gray-700 font-semibold mb-2">Password</label>
+                <input type="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Enter User Password">
+                @error('password')
+                <p class="text-red-500 text-xs mt-1">
+                    {{$message}}
+                </p>
+                @enderror
+            </div>
+            <div class="mb-4 mt-4">
                 <label for="roles" class="block text-gray-700 font-semibold mb-2">Roles</label>
                 <select name="roles[]" multiple class="w-full">
                     <option value="" disabled class="w-full px-4 py-2 shadow-lg mb-4">----Select Role----</option>
                     @foreach ($roles as $role )
-                    <option value="{{$role}}" class="w-full px-4 py-2 shadow-lg mb-4 rounded-2xl text-center hover:bg-blue-400">{{$role}}</option>
+                    <option value="{{$role}}" {{ in_array($role, $userRoles) ? 'selected':'' }} class="w-full px-4 py-2 shadow-lg mb-4 rounded-2xl text-center hover:bg-blue-400">
+                        {{$role}}
+                    </option>
                     @endforeach
                 </select>
                 @error('roles')

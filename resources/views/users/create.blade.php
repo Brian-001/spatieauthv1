@@ -32,19 +32,13 @@
             </div>
             <div class="mb-4 mt-4">
                 <label for="roles" class="block text-gray-700 font-semibold mb-2">Roles</label>
-                <select name="roles[]" multiple class="w-full">
-                    <option value="" disabled class="w-full px-4 py-2 shadow-lg mb-4">----Select Role----</option>
+                <select name="roles[]" multiple class="w-full border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                    <option value="" disabled class="hidden">----Select Role----</option>
                     @foreach($roles as $role)
-                    <div class="">
-                        <option value="{{$role}}" class="w-full px-4 py-2 shadow-lg mb-4 rounded-2xl text-center hover:bg-blue-400">{{$role}}</option>
-                    </div>
+                    <option value="{{$role}}" class="w-full px-4 py-2 hover:bg-blue-400">{{$role}}</option>
                     @endforeach
                 </select>
-                @error('password')
-                <p class="text-red-500 text-xs mt-1">
-                    {{$message}}
-                </p>
-                @enderror
+
             </div>
             <div class="flex justify-end">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Add</button>
