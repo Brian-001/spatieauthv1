@@ -31,7 +31,7 @@
                     User
                 </button>
                 <div class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg">
-                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Login</a>
+                    <a href="{{route('login')}}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Login</a>
                     <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
                 </div>
             </div>
